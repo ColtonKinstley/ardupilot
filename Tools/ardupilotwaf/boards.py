@@ -412,7 +412,7 @@ class Board:
 
         if cfg.env.DEST_OS == 'darwin':
             env.LINKFLAGS += [
-                '-Wl,-dead_strip',
+                '-Wl,--gc-sections',
             ]
         else:
             env.LINKFLAGS += [
@@ -669,7 +669,7 @@ class sitl(Board):
         cfg.check_librt(env)
         cfg.check_feenableexcept()
 
-        env.LINKFLAGS += ['-pthread', '-Wl,-dead_strip,-ld_classic']
+        env.LINKFLAGS += ['-pthread', '-Wl,--gc-sections']
 
         if cfg.env.DEBUG and 'clang++' in cfg.env.COMPILER_CXX and cfg.options.asan:
              env.LINKFLAGS += ['-fsanitize=address']

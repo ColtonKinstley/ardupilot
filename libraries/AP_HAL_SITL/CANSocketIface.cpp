@@ -24,6 +24,7 @@
 
 #include <AP_HAL/AP_HAL.h>
 #include <AP_HAL/system.h>
+#include <cstdint>
 
 #if HAL_NUM_CAN_IFACES
 
@@ -654,7 +655,7 @@ bool CANIface::CANSocketEventSource::wait(uint64_t duration, AP_HAL::EventHandle
     pollfd pollfds[HAL_NUM_CAN_IFACES] {};
     uint8_t pollfd_iface_map[HAL_NUM_CAN_IFACES] {};
     unsigned long int num_pollfds = 0;
-    
+
     // Poll FD set setup
     for (unsigned i = 0; i < HAL_NUM_CAN_IFACES; i++) {
         if (_ifaces[i] == nullptr) {

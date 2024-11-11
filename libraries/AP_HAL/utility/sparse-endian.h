@@ -20,9 +20,9 @@
  */
 #pragma once
 
+#include <stdint.h>
 #include <byteswap.h>
 #include <endian.h>
-#include <stdint.h>
 
 #ifdef __CHECKER__
 #define __ap_bitwise __attribute__((bitwise))
@@ -53,19 +53,41 @@ typedef uint64_t __ap_bitwise be64_t;
 #undef le64toh
 
 #if __BYTE_ORDER == __LITTLE_ENDIAN
-#define bswap_16_on_le(x) __bswap_16(x)
-#define bswap_32_on_le(x) __bswap_32(x)
-#define bswap_64_on_le(x) __bswap_64(x)
+#define bswap_16_on_le(x) (uint16_t)((((x) & 0x00FFU) << 8) | (((x) & 0xFF00U) >> 8))
+#define bswap_32_on_le(x) (uint32_t)((((x) & 0x000000FFU) << 24) | \
+                                     (((x) & 0x0000FF00U) << 8)  | \
+                                     (((x) & 0x00FF0000U) >> 8)  | \
+                                     (((x) & 0xFF000000U) >> 24))
+#define bswap_64_on_le(x) (uint64_t)((((x) & 0x00000000000000FFULL) << 56) | \
+                                     (((x) & 0x000000000000FF00ULL) << 40) | \
+                                     (((x) & 0x0000000000FF0000ULL) << 24) | \
+                                     (((x) & 0x00000000FF000000ULL) << 8)  | \
+                                     (((x) & 0x000000FF00000000ULL) >> 8)  | \
+                                     (((x) & 0x0000FF0000000000ULL) >> 24) | \
+                                     (((x) & 0x00FF000000000000ULL) >> 40) | \
+                                     (((x) & 0xFF00000000000000ULL) >> 56))
 #define bswap_16_on_be(x) (x)
 #define bswap_32_on_be(x) (x)
 #define bswap_64_on_be(x) (x)
+
 #elif __BYTE_ORDER == __BIG_ENDIAN
 #define bswap_16_on_le(x) (x)
 #define bswap_32_on_le(x) (x)
 #define bswap_64_on_le(x) (x)
-#define bswap_16_on_be(x) __bswap_16(x)
-#define bswap_32_on_be(x) __bswap_32(x)
-#define bswap_64_on_be(x) __bswap_64(x)
+#define bswap_16_on_be(x) (uint16_t)((((x) & 0x00FFU) << 8) | (((x) & 0xFF00U) >> 8))
+#define bswap_32_on_be(x) (uint32_t)((((x) & 0x000000FFU) << 24) | \
+                                     (((x) & 0x0000FF00U) << 8)  | \
+                                     (((x) & 0x00FF0000U) >> 8)  | \
+                                     (((x) & 0xFF000000U) >> 24))
+#define bswap_64_on_be(x) (uint64_t)((((x) & 0x00000000000000FFULL) << 56) | \
+                                     (((x) & 0x000000000000FF00ULL) << 40) | \
+                                     (((x) & 0x0000000000FF0000ULL) << 24) | \
+                                     (((x) & 0x00000000FF000000ULL) << 8)  | \
+                                     (((x) & 0x000000FF00000000ULL) >> 8)  | \
+                                     (((x) & 0x0000FF0000000000ULL) >> 24) | \
+                                     (((x) & 0x00FF000000000000ULL) >> 40) | \
+                                     (((x) & 0xFF00000000000000ULL) >> 56))
+
 #endif
 
 static inline le16_t htole16(uint16_t value) { return (le16_t __ap_force) bswap_16_on_be(value); }

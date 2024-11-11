@@ -552,6 +552,7 @@ def configure(cfg):
     cfg.env.append_value('GIT_SUBMODULES', 'libskybrush')
     cfg.env.append_value('INCLUDES', [
         cfg.srcnode.abspath() + '/modules/libskybrush/include/',
+        cfg.srcnode.abspath() + '/usr/include/',
     ])
 
     cfg.find_program('rsync', mandatory=False)
@@ -577,7 +578,7 @@ def configure(cfg):
     cfg.write_config_header(os.path.join(cfg.variant, 'ap_config.h'), guard='_AP_CONFIG_H_')
 
     # add in generated flags
-    cfg.env.CXXFLAGS += ['-include', 'ap_config.h']
+    cfg.env.CXXFLAGS += ['-include', 'ap_config.h', "-Wno-error=maybe-uninitialized"]
 
     _collect_autoconfig_files(cfg)
 
